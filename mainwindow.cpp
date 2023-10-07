@@ -57,11 +57,14 @@ void MainWindow::on_btnValider_clicked()
     if(ui->DHCP->isChecked() && ui->lineEdit_ip->text().isEmpty() && ui->lineEdit_masque->text().isEmpty()){
 #ifdef Q_OS_WIN // Vérifie si le système d'exploitation est Windows
         QString cmd("netsh interface ip set address \"Ethernet\" dhcp");
+        QString cmdGetIP("ipconfig");
 #elif defined(Q_OS_LINUX) // Vérifie si le système d'exploitation est Linux
         QString cmd("sudo ifconfig eth0 dhcp"); // Assurez-vous de remplacer "eth0" par l'interface correcte
+        QString cmdGetIP("ipconfig");
 #endif
         QProcess proc;
         proc.start(cmd);
+        proc.start(cmdGetIP);
         proc.waitForFinished();
         qDebug() << proc.readAll();
         QMessageBox::information(this,"message","Commande réussie");
